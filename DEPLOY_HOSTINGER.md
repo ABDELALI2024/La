@@ -10,7 +10,16 @@ Works on Single, Premium, Business and Cloud shared plans. No Node server needed
 
 ## 1. Database (5 min)
 
-1. hPanel → Databases → MySQL → create database `langzio`, user + strong password.
+**Option A — bouton "Connect a database" (Node Web App ou panneau Websites) :**
+cliquez dessus. Hostinger crée la base MySQL et injecte
+`DB_HOST` / `DB_NAME` / `DB_USER` / `DB_PASS` dans les variables
+d'environnement — **l'API Langzio les lit automatiquement** (priorité sur
+`config.php`). Passez ensuite à l'import ci-dessous.
+
+**Option B — manuelle :** hPanel → Databases → MySQL → créez la base `langzio`,
+utilisateur + mot de passe fort, puis mettez-les dans `~/langzio-private/config.php`.
+
+Import (dans les deux cas) :
 2. Open **phpMyAdmin** for that DB → Import → `database/schema.sql` → Go.
 3. Import → `database/seed_lessons.sql` → Go.
 4. (Alternative with SSH) upload repo, set env, run `php database/migrate.php`

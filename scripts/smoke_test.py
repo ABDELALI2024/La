@@ -68,6 +68,8 @@ check("php router has all groups", all(k in api for k in ["/auth/register", "/le
 gem = (ROOT / "private" / "lib" / "Gemini.php").read_text(encoding="utf-8")
 check("ai honest errors (no fabrication)", "temporarily unavailable" in gem and "empty reply" in gem)
 check("ai key server-side only", "cfg('gemini_api_key'" in gem)
+helpers = (ROOT / "private" / "lib" / "Helpers.php").read_text(encoding="utf-8")
+check("php reads Hostinger DB env vars", all(k in helpers for k in ["DB_HOST", "DB_NAME", "DB_USER", "DB_PASS"]))
 check("config outside webroot documented", (ROOT / "DEPLOY_HOSTINGER.md").read_text(encoding="utf-8").count("langzio-private") >= 3)
 
 print("== database ==")

@@ -9,8 +9,22 @@ function cfg(string $key, $default = null) {
       dirname(__DIR__) . '/config.php',                     // private/config.php (local/server fallback)
       dirname(__DIR__, 2) . '/private/config.php',
     ];
-    $c = ['env' => 'production', 'url' => 'https://langzio.com'];
+    $c = ['env' => 'production', 'url' => 'https://langzio.com', 'db' => []];
     foreach ($paths as $p) { if (is_file($p)) { $c = array_merge($c, require $p); break; } }
+    // Environment override (highest priority): Hostinger's "Connect a database"
+    // writes DB_HOST/DB_NAME/DB_USER/DB_PASS (+ optional GEMINI_API_KEY) into
+    // the runtime environment. This lets the API connect with zero config file.
+    $envMap = [
+      'DB_HOST' => ['db', 'host'], 'DB_NAME' => ['db', 'name'],
+      'DB_USER' => ['db', 'user'], 'DB_PASS' => ['db', 'pass'],
+      'GEMINI_API_KEY' => ['gemini_api_key'],
+    ];
+    foreach ($envMap as $env => $path) {
+      $v = getenv($env);
+      if ($v === false || $v === '') continue;
+      if (count($path) === 2) { if (!isset($c[$path[0]]) || !is_array($c[$path[0]])) $c[$path[0]] = []; $c[$path[0]][$path[1]] = $v; }
+      else $c[$path[0]] = $v;
+    }
   }
   $parts = explode('.', $key); $v = $c;
   foreach ($parts as $k) { if (!is_array($v) || !array_key_exists($k, $v)) return $default; $v = $v[$k]; }
