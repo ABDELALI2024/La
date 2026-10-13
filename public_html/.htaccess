@@ -1,0 +1,49 @@
+# LANGZIO — Apache config for Hostinger shared hosting (public_html/.htaccess)
+# - Force HTTPS, pretty SPA URLs, protect PHP API, block secrets.
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  # Force HTTPS (Hostinger SSL is free; keep this on for langzio.com)
+  RewriteCond %{HTTPS} off
+  RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+  # API → PHP router
+  RewriteRule ^api/(.*)$ api/index.php?route=$1 [L,QSA]
+
+  # SEO files stay direct
+  RewriteRule ^(sitemap\.xml|robots\.txt|favicon\.ico|assets/.*)$ - [L]
+
+  # SPA fallback: private/app routes serve index.html, but real files pass through
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteCond %{REQUEST_URI} !^/api/
+  RewriteRule ^ index.html [L]
+</IfModule>
+
+# Security headers (also set in PHP; belt and suspenders)
+<IfModule mod_headers.c>
+  Header always set X-Content-Type-Options nosniff
+  Header always set X-Frame-Options DENY
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set Permissions-Policy "camera=(), microphone=(self), geolocation=()"
+</IfModule>
+
+# Caching: immutable hashed assets, short HTML
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType text/html "access plus 0 seconds"
+  ExpiresByType application/javascript "access plus 1 year"
+  ExpiresByType text/css "access plus 1 year"
+  ExpiresByType image/svg+xml "access plus 1 year"
+</IfModule>
+
+# Block access to anything sensitive if ever uploaded by mistake
+<FilesMatch "^(\.env|config\.php|\.git|\.htaccess|.*\.sql|.*\.log)$">
+  Require all denied
+</FilesMatch>
+
+# PHP hardening (within plan limits)
+php_value session.cookie_httponly 1
+php_value session.use_only_cookies 1
+php_value expose_php 0

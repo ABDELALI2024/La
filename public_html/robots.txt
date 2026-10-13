@@ -1,0 +1,19 @@
+User-agent: *
+Allow: /
+Allow: /about
+Allow: /how-it-works
+Allow: /features
+Allow: /pricing
+Allow: /contact
+Allow: /faq
+Allow: /lessons
+Allow: /vocabulary
+Disallow: /dashboard
+Disallow: /ai-tutor
+Disallow: /progress
+Disallow: /settings
+Disallow: /subscription
+Disallow: /admin
+Disallow: /api/
+
+Sitemap: https://langzio.com/sitemap.xml

@@ -1,0 +1,24 @@
+# OS / editor
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Secrets — never commit
+private/config.php
+.env
+*.env
+
+# Frontend (local)
+frontend/node_modules/
+*.log
+npm-debug.log*
+
+# PHP
+*.phar
+/vendor/
+
+# Uploads / backups / logs (must never be in public_html)
+*.sql.gz
+*.bak
+logs/
+tmp/
