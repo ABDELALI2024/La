@@ -8,7 +8,7 @@ audit. No Node server, Docker, Redis or SSR required on the host.
 
 | Path | Deploys to | Notes |
 |---|---|---|
-| `frontend/` | built into `public_html/` | React 18 + TS + Tailwind + React Router. `npm run build` outputs to `../public_html` (preserves `api/`). |
+| `frontend/` | `dist/` on Node Web Apps; copied to `public_html/` for FTP | React 18 + TS + Tailwind + React Router. `npm run build` outputs to `frontend/dist` (Hostinger Node). `npm run build:shared` also copies into `../public_html` (classic shared FTP, preserves `api/`). |
 | `public_html/` | Hostinger `public_html` | Static assets + `.htaccess` + `api/index.php` + `robots.txt` + `sitemap.xml` |
 | `private/` | `~/langzio-private/` (OUTSIDE web root, chmod 600 for config) | `config.php` (from `config.sample.php`), `lib/`, `cron/` |
 | `database/` | imported once | `schema.sql` → `seed_lessons.sql`, or `php database/migrate.php` |
@@ -20,7 +20,8 @@ audit. No Node server, Docker, Redis or SSR required on the host.
 cd frontend
 npm install
 npm run dev      # http://localhost:5173 (proxies /api to :8080 if you run a PHP stack)
-npm run build    # tsc + vite → ../public_html
+npm run build    # tsc + vite → frontend/dist (Hostinger Node Web Apps)
+npm run build:shared  # build + copy dist/ → ../public_html (classic FTP deploy)
 ```
 
 ## API (same-origin `/api/*`, JSON, session cookie + `X-CSRF-Token` for writes)

@@ -38,7 +38,10 @@ The API loads config from (first hit wins):
 
 ## 3. Upload the site
 
-1. Build locally: `cd frontend; npm install; npm run build` (outputs to `public_html/`).
+1. Build locally: `cd frontend; npm install; npm run build:shared` (builds to
+   `dist/`, then copies into `public_html/` preserving `api/`, `.htaccess`,
+   `robots.txt`, `sitemap.xml`). For managed Node.js Web Apps, plain
+   `npm run build` is enough — the platform deploys `dist/` itself.
 2. Upload the **contents** of local `public_html/` into Hostinger `public_html/`
    (or the addon-domain folder): `index.html`, `assets/`, `favicon.svg`,
    `api/`, `.htaccess`, `robots.txt`, `sitemap.xml`.
